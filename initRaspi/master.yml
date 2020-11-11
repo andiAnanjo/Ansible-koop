@@ -1,0 +1,5 @@
+---
+- name: Run Rasi config
+  hosts: all
+  roles:
+    - prepareImage

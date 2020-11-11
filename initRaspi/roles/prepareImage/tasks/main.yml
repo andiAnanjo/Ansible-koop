@@ -1,5 +1,16 @@
 ---
 
-name: Download image
-url: i'{{ ltsImage }}'
-  dest: /opt/lab/BootMedia/
+- name: Download image
+  get_url:
+    url: "{{ ltsImage }}"
+    dest: "{{ DownloadDir }}"
+
+- name: Uncompress the image
+  command: /usr/bin/xz -k -d "{{ DownloadDir }}/{{ ltsImage | urlsplit('path') | basename  }}"
+
+- name: Print LoopBackFilename
+  debug:
+    msg: "FILENAME='{{ ltsImage | urlsplit('path') | basename | regex_replace('.xz') }}"
+
+- name: Create loopback device
+  command: losetup -f -P "{{ DownloadDir }}/{{ ltsImage | urlsplit('path') | basename | regex_replace('.xz') }}"
