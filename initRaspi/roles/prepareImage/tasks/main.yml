@@ -1,0 +1,5 @@
+---
+
+name: Download image
+url: i'{{ ltsImage }}'
+  dest: /opt/lab/BootMedia/
