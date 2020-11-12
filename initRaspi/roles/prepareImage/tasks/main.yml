@@ -14,11 +14,7 @@
 - name: Register loopback device
   command: losetup -n -O name -j "{{ DownloadDir }}/{{ ltsImage | urlsplit('path') | basename | regex_replace('.xz') }}"
   register: loopDev
-
-- name: Print loopDev
-  debug:
-    msg: Loodev "{{ loopDev.stdout }}"
-    
+ 
 - name: Register mountpoint var
   shell: echo /tmp/$$
   register: mountpoint
