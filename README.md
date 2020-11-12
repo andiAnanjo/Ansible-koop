@@ -1,3 +1,9 @@
-# Ansible-koop
+## Ansible-koop
 
-Ansible role to prepare raspberry images for ubuntu server
+This ansible playbok prepares raspberry images
+
+Roles:
+- prepareImage:
+  - vars/main.yml:
+    ltsImage:
+    DownloadDir:
