@@ -8,9 +8,32 @@
 - name: Uncompress the image
   command: /usr/bin/xz -k -d "{{ DownloadDir }}/{{ ltsImage | urlsplit('path') | basename  }}"
 
-- name: Print LoopBackFilename
-  debug:
-    msg: "FILENAME='{{ ltsImage | urlsplit('path') | basename | regex_replace('.xz') }}"
-
 - name: Create loopback device
   command: losetup -f -P "{{ DownloadDir }}/{{ ltsImage | urlsplit('path') | basename | regex_replace('.xz') }}"
+
+- name: Register loopback device
+  command: losetup -n -O name -j "{{ DownloadDir }}/{{ ltsImage | urlsplit('path') | basename | regex_replace('.xz') }}"
+  register: loopDev
+
+- name: Print loopDev
+  debug:
+    msg: Loodev "{{ loopDev.stdout }}"
+    
+- name: Register mountpoint var
+  shell: echo /tmp/$$
+  register: mountpoint
+
+- name: Register partition
+  command: ls "{{ loopDev.stdout }}"p2
+  register: partition
+
+- name: Get filesystem type
+  command: lsblk -n -f "{{ partition.stdout }}" -o FSTYPE
+  register: fsType
+
+- name: mount loopback-device
+  mount: 
+    path: "{{ mountpoint.stdout }}"
+    src: "{{ partition.stdout }}"
+    state: mounted
+    fstype: "{{ fsType.stdout }}"
