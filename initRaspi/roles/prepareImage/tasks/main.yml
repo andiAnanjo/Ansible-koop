@@ -6,7 +6,7 @@
     dest: "{{ DownloadDir }}"
 
 - name: Uncompress the image
-  command: /usr/bin/xz -k -d "{{ DownloadDir }}/{{ ltsImage | urlsplit('path') | basename  }}"
+  command: /usr/bin/xz -k -d -f "{{ DownloadDir }}/{{ ltsImage | urlsplit('path') | basename  }}"
 
 - name: Create loopback device
   command: losetup -f -P "{{ DownloadDir }}/{{ ltsImage | urlsplit('path') | basename | regex_replace('.xz') }}"

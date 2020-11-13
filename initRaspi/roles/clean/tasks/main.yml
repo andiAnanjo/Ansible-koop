@@ -1,0 +1,21 @@
+---
+
+- name: Register loopback device
+  command: losetup -n -O name -j "{{ DownloadDir }}/{{ ltsImage | urlsplit('path') | basename | regex_replace('.xz') }}"
+  register: loopDev
+
+- name: Register partition
+  command: ls "{{ loopDev.stdout }}"p2
+  register: partition
+
+- name: Register mountpoint
+  command: findmnt -n -o TARGET -S  "{{ partition.stdout }}"
+  register: mountpoint
+
+- name: Unmount loopback-device
+  mount: 
+    path: "{{ mountpoint.stdout }}"
+    state: absent
+
+- name: Delete loopback device
+  command: losetup -d "{{ loopDev.stdout }}"
