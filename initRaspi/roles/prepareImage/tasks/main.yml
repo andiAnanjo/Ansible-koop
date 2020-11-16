@@ -1,35 +1,90 @@
 ---
 
-- name: Download image
-  get_url:
-    url: "{{ ltsImage }}"
-    dest: "{{ DownloadDir }}"
+- name: Check if image uncompressed image exists
+  stat:
+    path: "{{ DownloadDir }}/{{ ltsImage | urlsplit('path') | basename | regex_replace('.xz') }}"
+  register: exist
+  tags: init
 
-- name: Uncompress the image
-  command: /usr/bin/xz -k -d -f "{{ DownloadDir }}/{{ ltsImage | urlsplit('path') | basename  }}"
+- name: Download and unzip image
+  block:
+  - name: Download image
+    get_url:
+      url: "{{ ltsImage }}"
+      dest: "{{ DownloadDir }}"
+
+  - name: Uncompress the image
+    command: /usr/bin/xz -k -d -f "{{ DownloadDir }}/{{ ltsImage | urlsplit('path') | basename  }}"
+
+  when: exist.stat.exists != True
+  tags: init
 
 - name: Create loopback device
   command: losetup -f -P "{{ DownloadDir }}/{{ ltsImage | urlsplit('path') | basename | regex_replace('.xz') }}"
+  tags: init
 
 - name: Register loopback device
   command: losetup -n -O name -j "{{ DownloadDir }}/{{ ltsImage | urlsplit('path') | basename | regex_replace('.xz') }}"
   register: loopDev
- 
-- name: Register mountpoint var
-  shell: echo /tmp/$$
-  register: mountpoint
+  tags: init
 
-- name: Register partition
+- name: Register mountpoint partition-1 var
+  shell: echo /tmp/$$/p1
+  register: mountpointp1
+  tags: init
+
+- name: Register mountpoint partition-2 var
+  shell: echo /tmp/$$/p2
+  register: mountpointp2
+  tags: init
+
+- name: Register partition1
+  command: ls "{{ loopDev.stdout }}"p1
+  register: partition1
+  tags: init
+
+- name: Register partition2
   command: ls "{{ loopDev.stdout }}"p2
-  register: partition
+  register: partition2
+  tags: init
 
 - name: Get filesystem type
-  command: lsblk -n -f "{{ partition.stdout }}" -o FSTYPE
-  register: fsType
+  command: lsblk -n -f "{{ partition1.stdout }}" -o FSTYPE
+  register: fsType1
+  tags: init
 
-- name: mount loopback-device
+- name: Get filesystem type
+  command: lsblk -n -f "{{ partition2.stdout }}" -o FSTYPE
+  register: fsType2
+  tags: init
+
+
+- name: mount loopback-device-partition-1
   mount: 
-    path: "{{ mountpoint.stdout }}"
-    src: "{{ partition.stdout }}"
+    path: "{{ mountpointp1.stdout }}"
+    src: "{{ partition1.stdout }}"
     state: mounted
-    fstype: "{{ fsType.stdout }}"
+    fstype: "{{ fsType1.stdout }}"
+  tags: init
+
+- name: mount loopback-device-partition-2
+  mount: 
+    path: "{{ mountpointp2.stdout }}"
+    src: "{{ partition2.stdout }}"
+    state: mounted
+    fstype: "{{ fsType2.stdout }}"
+  tags: init
+
+- name: Enable ssh
+  file:
+    path: " {{ mountpointp1.stdout/ssh }}"
+    state: touch
+  tags: init
+
+#- name: Find first free ip from list
+#  ansible.netcommon.net_ping:
+#    dest: {{ item }}
+#  loop: '{{ ips }}'
+  
+## Kann dest auch eine liste sein?
+## Until mit loop verbinden. Wie geht das?

@@ -1,6 +1,10 @@
 ---
-- name: Run Rasi config
+- name: Run Raspi config
   hosts: all
   roles:
-    - prepareImage
-    - clean
+    - role: prepareImage
+      tags:
+        - init
+    - role: clean
+      tags:
+        - cleanup

@@ -3,19 +3,40 @@
 - name: Register loopback device
   command: losetup -n -O name -j "{{ DownloadDir }}/{{ ltsImage | urlsplit('path') | basename | regex_replace('.xz') }}"
   register: loopDev
+  tags: cleanup
+
+- name: Register partition
+  command: ls "{{ loopDev.stdout }}"p1
+  register: partition1
+  tags: cleanup
 
 - name: Register partition
   command: ls "{{ loopDev.stdout }}"p2
-  register: partition
+  register: partition2
+  tags: cleanup
 
 - name: Register mountpoint
-  command: findmnt -n -o TARGET -S  "{{ partition.stdout }}"
-  register: mountpoint
+  command: findmnt -n -o TARGET -S  "{{ partition1.stdout }}"
+  register: mountpointp1
+  tags: cleanup
+
+- name: Register mountpoint
+  command: findmnt -n -o TARGET -S  "{{ partition2.stdout }}"
+  register: mountpointp2
+  tags: cleanup
 
 - name: Unmount loopback-device
   mount: 
-    path: "{{ mountpoint.stdout }}"
+    path: "{{ mountpointp1.stdout }}"
     state: absent
+  tags: cleanup
+
+- name: Unmount loopback-device
+  mount: 
+    path: "{{ mountpointp2.stdout }}"
+    state: absent
+  tags: cleanup
 
 - name: Delete loopback device
   command: losetup -d "{{ loopDev.stdout }}"
+  tags: cleanup
