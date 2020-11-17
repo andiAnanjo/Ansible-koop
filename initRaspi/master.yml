@@ -1,6 +1,7 @@
 ---
 - name: Run Raspi config
   hosts: all
+  gather_facts: False
   roles:
     - role: prepareImage
       tags:

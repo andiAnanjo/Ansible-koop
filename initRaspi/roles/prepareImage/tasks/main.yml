@@ -77,14 +77,18 @@
 
 - name: Enable ssh
   file:
-    path: " {{ mountpointp1.stdout/ssh }}"
+    path: "{{ mountpointp1.stdout }}/ssh"
     state: touch
   tags: init
 
-#- name: Find first free ip from list
-#  ansible.netcommon.net_ping:
-#    dest: {{ item }}
-#  loop: '{{ ips }}'
-  
+- name: Find first free ip from list
+  shell: ping -q -c 3 "{{ item }}"
+  register: rc
+  loop: '{{ ips }}'
+  tags: init
+
+- debug:
+    msg: "IP-Address= {{ rc.stdout }}"
+  tags: init
 ## Kann dest auch eine liste sein?
 ## Until mit loop verbinden. Wie geht das?

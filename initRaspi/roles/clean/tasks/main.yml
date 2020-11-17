@@ -5,12 +5,12 @@
   register: loopDev
   tags: cleanup
 
-- name: Register partition
+- name: Register partition1
   command: ls "{{ loopDev.stdout }}"p1
   register: partition1
   tags: cleanup
 
-- name: Register partition
+- name: Register partition2
   command: ls "{{ loopDev.stdout }}"p2
   register: partition2
   tags: cleanup
