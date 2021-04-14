@@ -1,4 +1,4 @@
 ---
 ltsImage: https://cdimage.ubuntu.com/releases/20.04.1/release/ubuntu-20.04.1-preinstalled-server-arm64+raspi.img.xz
 DownloadDir: /opt/lab/BootMedia
-ips: [192.168.57.100,192.168.57.101,192.168.57.102]
+ips: [192.168.57.111,192.168.1.1,192.168.57.112]

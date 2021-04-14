@@ -4,8 +4,4 @@
   gather_facts: False
   roles:
     - role: prepareImage
-      tags:
-        - init
     - role: clean
-      tags:
-        - cleanup

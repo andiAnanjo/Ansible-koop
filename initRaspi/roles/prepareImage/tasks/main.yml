@@ -82,13 +82,31 @@
   tags: init
 
 - name: Find first free ip from list
-  shell: ping -q -c 3 "{{ item }}"
-  register: rc
-  loop: '{{ ips }}'
+  command: ping -q -c 1 "{{ item }}"
+  loop: "{{ ips }}"
+  register: XX
+  ignore_errors: yes
+  tags: init
+  
+## ist ein liste die bearbeitet wird -> "not in" -> überprüfen
+
+- name: Print XX
+  debug:
+    msg: "{{ XX }}"
   tags: init
 
-- debug:
-    msg: "IP-Address= {{ rc.stdout }}"
+- name: Set MyIp
+  set_fact:
+    myIp: "{{ item.item | from_json }}"
+  when: item.rc == 0
+  loop: "{{ XX.results }}"
   tags: init
+
+- name: Debug myIp-var
+  debug:
+    var: "Printout {{ myIp }}"
+  tags: init
+  
+
 ## Kann dest auch eine liste sein?
 ## Until mit loop verbinden. Wie geht das?
