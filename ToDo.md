@@ -1,0 +1,31 @@
+Loop/Until Example:
+- name: set ip_list fact to an array
+  set_fact:
+    ip_list: []
+
+- name: Find all free ip from list
+  command: ping -q -c 1 "{{ item }}"
+  register: ping_list
+  ignore_errors: yes
+  loop:
+    - 192.168.178.109
+    - 192.168.178.02
+    - 192.168.178.107
+
+- name: Print ping_list
+  debug:
+    msg: "{{ item.item }} - {{ item.rc }}"
+  loop: "{{ ping_list.results }}"
+
+- name: Set ip_list
+  set_fact:
+    ip_list: "{{ ip_list + [ item.item ] }}"
+  when: item.rc == 0
+  loop: "{{ ping_list.results }}"
+
+- name: Print not pingable Ip
+  debug:
+    msg: "{ item }"
+  loop: "{{ ip_list }}"
+
+
