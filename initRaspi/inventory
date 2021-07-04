@@ -5,3 +5,12 @@ localhost ansible_connection=local ansible_python_interpreter="/usr/bin/env pyth
 
 
 [desktop-raspis]
+schulung01 ansible_host=192.168.178.100
+schulung02 ansible_host=192.168.178.101
+schulung03 ansible_host=192.168.178.102
+schulung04 ansible_host=192.168.178.103
+schulung05 ansible_host=192.168.178.104
+schulung06 ansible_host=192.168.178.105
+schulung07 ansible_host=192.168.178.106
+schulung08 ansible_host=192.168.178.107
+
