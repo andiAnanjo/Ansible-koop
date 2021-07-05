@@ -5,6 +5,11 @@
   register: loopDev
   tags: cleanup
 
+- name: Print loopdevice
+  debug:
+    msg: " {{ loopDev }} "
+  tags: cleanup
+
 - name: Register partition1
   command: ls "{{ loopDev.stdout }}"p1
   register: partition1

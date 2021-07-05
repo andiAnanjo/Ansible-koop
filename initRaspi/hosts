@@ -1,10 +1,10 @@
 localhost ansible_connection=local ansible_python_interpreter="/usr/bin/env python3"
 [all:vars]
 
-[kube-raspis]
+[kube_raspis]
 
 
-[desktop-raspis]
+[schulung]
 schulung01 ansible_host=192.168.178.100
 schulung02 ansible_host=192.168.178.101
 schulung03 ansible_host=192.168.178.102

@@ -28,4 +28,6 @@ Loop/Until Example:
     msg: "{ item }"
   loop: "{{ ip_list }}"
 
-
+# Fragen:
+Geht install von anderere Architiketur x86-> ARM bei chroot-Umgebung (ARM-Image gemoutet)
+ - Initiales Startup-File erzeugen ist evtl effiektiver

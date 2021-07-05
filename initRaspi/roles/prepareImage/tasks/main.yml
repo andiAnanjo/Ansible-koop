@@ -81,3 +81,11 @@
     state: touch
   tags: init
 
+- name: Install packages from list
+  apt:
+    name: "{{pkgs}}"
+    state: present
+  #  dpkg_options: "root=/{{ mountpointp2.stdout }}"
+    update_cache: yes
+  loop: "{{ pkgs }}"
+  tags: init

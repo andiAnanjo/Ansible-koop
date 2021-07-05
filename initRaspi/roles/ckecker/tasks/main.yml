@@ -1,0 +1,12 @@
+---
+
+- name: Install packages from list
+  apt:
+    name: "{{pkgs}}"
+    state: present
+    dpkg_options: "root=/tmp/38152/p2"
+    update_cache: yes
+  loop: 
+    - net-tools
+    - sysstat
+  tags: ckecker
