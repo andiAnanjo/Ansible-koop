@@ -29,5 +29,5 @@ Loop/Until Example:
   loop: "{{ ip_list }}"
 
 # Fragen:
-Geht install von anderere Architiketur x86-> ARM bei chroot-Umgebung (ARM-Image gemoutet)
+ - Install per deebootstrab/multistrap von anderere Architiketur x86-> ARM bei chroot-Umgebung (ARM-Image gemoutet) ?
  - Initiales Startup-File erzeugen ist evtl effiektiver
